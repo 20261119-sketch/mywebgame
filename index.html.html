@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삼색이의 요즘 트렌드 데이트 핏 & 메이크업 게임 🐱✨</title>
+    <style>
+        :root {
+            --wood-closet: #4a3525;
+            --wood-shelf: #d7ccc8;
+            --calico-white: #fcf8f5;
+            --calico-orange: #ff9100;
+            --calico-black: #2d1a10;
+            --pink-main: #ff80ab;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0; padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: #fff0f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            display: flex;
+            width: 1200px;
+            height: 780px;
+            background: #fff;
+            border: 8px solid var(--wood-closet);
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* =================================================================
+           왼쪽 레이아웃: 옷장 사랍장 (요즘 스타일 25종)
+        ==================================================================== */
+        #closet-side {
+            width: 540px;
+            background-color: #5d4037;
+            border-right: 6px solid var(--wood-closet);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .closet-title {
+            color: #fff;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: var(--wood-closet);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .closet-shelf {
+            background: #f5f5f5;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 2px solid var(--wood-shelf);
+        }
+
+        .shelf-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #3e2723;
+            margin-bottom: 8px;
+            border-left: 5px solid var(--pink-main);
+            padding-left: 8px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .box-cell {
+            background: #fff;
+            border: 2px dashed #bcaaa4;
+            border-radius: 10px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* =================================================================
+           트렌디 아이템 CSS 그래픽 (요즘 핫한 스타일 레이아웃)
+        ==================================================================== */
+        .item { cursor: grab; position: relative; }
+        .item:active { cursor: grabbing; }
+        .item.dragging { opacity: 0.3; }
+
+        /* [모자 - 크기 고정] */
+        .hat-1 { width: 75px; height: 35px; background: #e0e0e0; border-radius: 40px 40px 10px 10px; transform: rotate(-5deg); } /* Y2K 니트 베레모 */
+        .hat-1::after { content:''; position: absolute; top:-4px; left:35px; width:6px; height:6px; background:#bdbdbd; border-radius:50%; }
+        .hat-2 { width: 70px; height: 35px; background: #ffe0b2; border-radius: 50% 50% 0 0; border-bottom: 4px solid #ffb74d; } /* 스트로 버킷햇 */
+        .hat-3 { width: 68px; height: 32px; background: #212121; border-radius: 8px 8px 0 0; } /* 힙스터 볼캡 */
+        .hat-3::after { content:''; position: absolute; bottom: 0; right: -12px; width: 25px; height: 5px; background: #212121; border-radius: 0 5px 5px 0; }
+        .hat-4 { width: 72px; height: 25px; background: #f8bbd0; border-radius: 20px; } /* 벨벳 머리띠 느낌 */
+        .hat-4::before { content:'🎀'; position: absolute; top:-6px; left:24px; font-size:14px; }
+        .hat-5 { width: 70px; height: 30px; background: #b2dfdb; border-radius: 50%; border: 2px dashed #009688; } /* 힙 버킷햇 */
+
+        /* [안경 - 고양이 얼굴폭에 커스텀] */
+        .glasses-1, .glasses-2, .glasses-3, .glasses-4, .glasses-5 { display: flex; gap: 6px; width: 76px; justify-content: center; }
+        .lens { width: 32px; height: 24px; border-radius: 4px; }
+        .glasses-1 .lens { border: 2px solid #212121; background: rgba(0,0,0,0.05); height: 20px; } /* 요즘 유행 긱시크 안경 */
+        .glasses-2 .lens { border: 3px solid #ff4081; border-radius: 50%; background: rgba(255,64,129,0.1); } /* 무테 핑크 선글라스 */
+        .glasses-3 .lens { border: 2px solid #ffeb3b; border-radius: 50% 50% 0 0; background: #212121; } /* 힙스터 에비에이터 */
+        .glasses-4 .lens { border: 2px solid #9c27b0; background: #212121; border-radius: 50%; } /* 오벌 선글라스 */
+        .glasses-5 .lens { border: 2px solid #00e5ff; background: rgba(0,229,255,0.1); } /* 투명 뿔테 */
+
+        /* [옷 - 고양이 몸통 스펙에 완전 밀착 핏] */
+        .clothes-1 { width: 84px; height: 160px; background: linear-gradient(#f8bbd0, #f48fb1); border-radius: 20px 20px 40px 40px; border-bottom: 20px solid #fff; } /* 발레코어 쉬폰 원피스 */
+        .clothes-2 { width: 84px; height: 155px; background: #e0f7fa; border-radius: 10px; position: relative; border-bottom: 45px solid #263238; } /* 크롭 셔츠 & 와이드 카고팬츠 */
+        .clothes-2::before { content:''; position: absolute; bottom: 45px; left: 0; width: 100%; height: 8px; background: #fff; }
+        .clothes-3 { width: 84px; height: 160px; background: #b388ff; border-radius: 15px; border-bottom: 50px solid #ede7f6; } /* 오프숄더 니트 & 롱스커트 */
+        .clothes-4 { width: 84px; height: 150px; background: #c8e6c9; border-radius: 8px; border-bottom: 35px solid #1b5e20; } /* 올드머니 미니멀 원피스 */
+        .clothes-5 { width: 84px; height: 158px; background: #fff9c4; border-radius: 16px; border-bottom: 40px solid #ff5722; } /* 볼레로 가디건 & 데님 스커트 */
+
+        /* [가방] */
+        .bag-1 { width: 42px; height: 35px; background: #cfd8dc; border-radius: 8px; border: 2px solid #90a4ae; } /* 실버 숄더백 */
+        .bag-1::before { content:''; position: absolute; top: -14px; left: 6px; width: 26px; height: 16px; border: 2px solid #90a4ae; border-bottom: none; border-radius: 50% 50% 0 0; }
+        .bag-2 { width: 38px; height: 38px; background: #ff80ab; border-radius: 50%; } /* 미니 하트 백 */
+        .bag-2::after { content:'❤️'; position: absolute; top:8px; left:8px; font-size:12px; }
+        .bag-3 { width: 45px; height: 30px; background: #212121; border-radius: 4px; } /* 패딩 초승달 백 */
+        .bag-4 { width: 40px; height: 35px; background: #ffe082; border-radius: 12px 12px 4px 4px; border: 2px dashed #ffb300; } /* 빈티지 캔버스백 */
+        .bag-5 { width: 36px; height: 42px; background: #81c784; border-radius: 8px; } /* 미니 백팩 */
+
+        /* [신발 - 좌우 벌림 폭 고양이 발 위치에 고정] */
+        .shoes-1, .shoes-2, .shoes-3, .shoes-4, .shoes-5 { display: flex; gap: 42px; width: 92px; justify-content: center; }
+        .sh-art { width: 25px; height: 18px; }
+        .shoes-1 .sh-art { background: #212121; border-top: 5px solid #fff; border-radius: 8px 12px 4px 4px; } /* 청키 고프코어 스니커즈 */
+        .shoes-2 .sh-art { background: #ff4081; border-radius: 6px 8px 2px 2px; border-bottom: 4px solid #c2185b; } /* 발레리나 플랫 */
+        .shoes-3 .sh-art { background: #5d4037; border-radius: 6px; height: 24px; } /* 웨스턴 롱부츠 */
+        .shoes-4 .sh-art { background: #e0e0e0; border-radius: 8px; border: 2px solid #9e9e9e; } /* 힙스터 클로그 스퀘어 */
+        .shoes-5 .sh-art { background: #ffb74d; border-radius: 5px; border-top: 4px solid #fff; } /* 메리제인 슈즈 */
+
+        /* =================================================================
+           오른쪽 레이아웃: 메인 스튜디오 피팅룸 (삼색 고양이 베이스 사양)
+        ==================================================================== */
+        #room-side {
+            flex: 1;
+            background: radial-gradient(circle, #fffde7 0%, #fff0f3 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .cat-canvas {
+            position: relative;
+            width: 360px;
+            height: 560px;
+        }
+
+        /* 사람 신체 비율을 가진 탄탄한 삼색이 체형 공식 */
+        .cat-ear { position: absolute; width: 0; height: 0; border-left: 24px solid transparent; border-right: 24px solid transparent; border-bottom: 38px solid var(--calico-orange); top: 50px; }
+        .cat-ear.l-side { left: 110px; transform: rotate(-15deg); border-bottom-color: var(--calico-black); }
+        .cat-ear.r-side { right: 110px; transform: rotate(15deg); }
+
+        .cat-head-base {
+            position: absolute; width: 130px; height: 110px;
+            background: var(--calico-white); border-radius: 50%;
+            top: 75px; left: 115px; z-index: 2;
+            background: linear-gradient(135deg, var(--calico-black) 32%, transparent 32%), linear-gradient(-135deg, var(--calico-orange) 36%, var(--calico-white) 36%);
+        }
+
+        .cat-face-layout { position: relative; width: 100%; height: 100%; }
+        .cat-eye-dot { position: absolute; width: 12px; height: 12px; background: #212121; border-radius: 50%; top: 50px; }
+        .cat-eye-dot.l-side { left: 32px; }
+        .cat-eye-dot.r-side { right: 32px; }
+        .cat-eye-dot::after { content:''; position: absolute; width: 4px; height: 4px; background: #fff; border-radius: 50%; top:2px; left:2px; }
+        
+        /* 메이크업 연동용 동적 스킨 오버레이 (초기 투명) */
+        .cat-blush-skin { position: absolute; width: 22px; height: 12px; background: transparent; border-radius: 50%; top: 64px; transition: background 0.3s; }
+        .cat-blush-skin.l-side { left: 24px; }
+        .cat-blush-skin.r-side { right: 24px; }
+        
+        .cat-nose-pink { position: absolute; width: 12px; height: 8px; background: #ff8a80; border-radius: 50%; top: 62px; left: 59px; }
+        
+        /* 립스틱 전용 마스크 구역 */
+        .cat-lips { position: absolute; width: 14px; height: 6px; background: transparent; border-radius: 0 0 6px 6px; top: 76px; left: 58px; transition: background 0.3s; }
+
+        .cat-body-base {
+            position: absolute; width: 84px; height: 160px;
+            background: var(--calico-white); border-radius: 42px;
+            top: 175px; left: 138px; z-index: 1;
+            background: radial-gradient(circle at 25% 35%, var(--calico-orange) 28%, transparent 28%), radial-gradient(circle at 75% 65%, var(--calico-black) 33%, var(--calico-white) 33%);
+        }
+
+        /* 사람 옷 핏 소화용 직립 관절 팔다리 디자인 */
+        .cat-arm-limb { position: absolute; width: 22px; height: 100px; background: var(--calico-white); border-radius: 11px; top: 185px; z-index: 0; }
+        .cat-arm-limb.l-side { left: 120px; transform: rotate(12deg); background: var(--calico-black); }
+        .cat-arm-limb.r-side { right: 120px; transform: rotate(-12deg); }
+
+        .cat-leg-limb { position: absolute; width: 24px; height: 115px; background: var(--calico-white); border-radius: 12px; top: 320px; z-index: 0; }
+        .cat-leg-limb.l-side { left: 144px; background: var(--calico-orange); }
+        .cat-leg-limb.r-side { right: 144px; }
+
+        /* =================================================================
+           오차 제로 밀착 핏 전용 고정 그리드 슬롯 (No-Scale Exact-Fit)
+        ==================================================================== */
+        .target-slot {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        /* 드롭 시 아이템이 별도의 배율 왜곡 없이 고양이 치수에 1:1로 정확하게 오버랩 스냅 */
+        .slot-hat     { top: 40px; left: 142px; width: 76px; height: 40px; z-index: 26; }
+        .slot-glasses { top: 114px; left: 142px; width: 76px; height: 30px; z-index: 27; }
+        .slot-clothes { top: 175px; left: 138px; width: 84px; height: 160px; z-index: 21; }
+        .slot-bag     { top: 230px; left: 215px; width: 50px; height: 50px; z-index: 23; }
+        .slot-shoes   { top: 418px; left: 134px; width: 92px; height: 30px; z-index: 22; }
+
+        .target-slot.hovered {
+            background: rgba(255, 64, 129, 0.15);
+            outline: 3px dashed var(--pink-main);
+            border-radius: 8px;
+        }
+
+        /* 하단 진행 제어 액션 단추 */
+        .next-step-btn {
+            margin-top: 15px;
+            padding: 15px 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background: var(--pink-main);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(255,64,129,0.3);
+            transition: all 0.2s;
+            z-index: 30;
+        }
+        .next-step-btn:hover { background: #f50057; transform: translateY(-2px); }
+
+        /* =================================================================
+           새로 추가된 인터랙티브 파트: 메이크업 화장대 룸 (Vanity Overlay)
+        ==================================================================== */
+        #vanity-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff0f5;
+            display: none;
+            z-index: 50;
+            padding: 40px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vanity-mirror-zone {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            border: 10px solid #f48fb1;
+            border-radius: 50px;
+            height: 650px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .vanity-cosmetic-box {
+            width: 45%;
+            background: #ffe4e1;
+            border-radius: 24px;
+            padding: 30px;
+            height: 650px;
+            border: 4px solid #f8bbd0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .makeup-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #c2185b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tool-row {
+            background: #fff;
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+        }
+
+        .tool-label { font-size: 15px; font-weight: bold; color: #4e342e; margin-bottom: 10px; }
+        .color-palette { display: flex; gap: 15px; }
+        .color-dot { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .color-dot:hover { transform: scale(1.15); }
+
+        /* =================================================================
+           최종 코디 매칭 성공 엔딩 무대 (Dating Benchmark Cinema)
+        ==================================================================== */
+        #ending-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffebee;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .dating-bench { display: flex; align-items: center; gap: 60px; margin-bottom: 25px; }
+        
+        /* 턱시도 매칭 파트너 냥이 스펙 */
+        .partner-cat-model { position: relative; width: 360px; height: 560px; transform: scale(0.95); }
+        .p-ear { position: absolute; width:0; height:0; border-left:24px solid transparent; border-right:24px solid transparent; border-bottom:38px solid #212121; top:50px; }
+        .p-ear.l-side { left:110px; transform:rotate(-15deg); }
+        .p-ear.r-side { right:110px; transform:rotate(15deg); }
+        .p-head { position: absolute; width:130px; height:110px; background:#212121; border-radius:50%; top:75px; left:115px; z-index:2; }
+        .p-body { position: absolute; width:84px; height:160px; background:#212121; border-radius:42px; top:175px; left:138px; z-index:1; }
+        .p-body::after { content:''; position: absolute; top:0; left:22px; width: 40px; height: 60px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+        .p-arm { position: absolute; width:22px; height:100px; background:#212121; border-radius:11px; top:185px; }
+        .p-arm.l-side { left:120px; transform:rotate(12deg); }
+        .p-arm.r-side { right:120px; transform:rotate(-12deg); }
+        .p-leg { position: absolute; width:24px; height:115px; background:#212121; border-radius:12px; top:320px; }
+        .p-leg.l-side { left:144px; }
+        .p-leg.r-side { right:144px; }
+        .p-bouquet { position: absolute; top: 220px; left: 60px; font-size: 55px; z-index: 10; animation: bounce 0.5s infinite alternate; }
+
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+        .heart-center { font-size: 90px; animation: beat 0.4s infinite alternate; }
+        @keyframes beat { from { transform: scale(1); } to { transform: scale(1.2); } }
+        
+        .ending-text { font-size: 24px; font-weight: bold; color: #d81b60; text-align: center; line-height: 1.6; }
+        .reset-btn { margin-top: 20px; padding: 12px 35px; background: #5d4037; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        
+        #final-player-slot { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="closet-side">
+        <div class="closet-title">삼색이의 트렌디 옷장</div>
+        
+        <div class="closet-shelf">
+            <div class="shelf-name">트렌디 헤어 장식 (모자)</div>
+            <div class="item-grid">
+                <div class="box-cell"><div class="item hat-1" draggable="true" id="h1" data-type="hat"></div></div>
+                <div class="box-cell"><div class="item hat-2" draggable="true" id="h2" data-type="hat"></div></div>
+                <div class="box-cell"><div class="item hat-3" draggable="true" id="h3" data-type="hat"></div></div>
+                <div class="box-cell"><div class="item hat-4" draggable="true" id="h4" data-type="hat"></div></div>
+                <div class="box-cell"><div class="item hat-5" draggable="true" id="h5" data-type="hat"></div></div>
+            </div>
+        </div>
+
+        <div class="closet-shelf">
+            <div class="shelf-name">긱시크 & 선글라스 (안경)</div>
+            <div class="item-grid">
+                <div class="box-cell"><div class="item glasses-1" draggable="true" id="g1" data-type="glasses"><div class="lens"></div><div class="lens"></div></div></div>
+                <div class="box-cell"><div class="item glasses-2" draggable="true" id="g2" data-type="glasses"><div class="lens"></div><div class="lens"></div></div></div>
+                <div class="box-cell"><div class="item glasses-3" draggable="true" id="g3" data-type="glasses"><div class="lens"></div><div class="lens"></div></div></div>
+                <div class="box-cell"><div class="item glasses-4" draggable="true" id="g4" data-type="glasses"><div class="lens"></div><div class="lens"></div></div></div>
+                <div class="box-cell"><div class="item glasses-5" draggable="true" id="g5" data-type="glasses"><div class="lens"></div><div class="lens"></div></div></div>
+            </div>
+        </div>
+
+        <div class="closet-shelf">
+            <div class="shelf-name">요즘 감성 데이트룩 (옷)</div>
+            <div class="item-grid">
+                <div class="box-cell"><div class="item clothes-1" draggable="true" id="c1" data-type="clothes"></div></div>
+                <div class="box-cell"><div class="item clothes-2" draggable="true" id="c2" data-type="clothes"></div></div>
+                <div class="box-cell"><div class="item clothes-3" draggable="true" id="c3" data-type="clothes"></div></div>
+                <div class="box-cell"><div class="item clothes-4" draggable="true" id="c4" data-type="clothes"></div></div>
+                <div class="box-cell"><div class="item clothes-5" draggable="true" id="c5" data-type="clothes"></div></div>
+            </div>
+        </div>
+
+        <div class="closet-shelf">
+            <div class="shelf-name">스포티 & 체인 스트랩 백 (가방)</div>
+            <div class="item-grid">
+                <div class="box-cell"><div class="item bag-1" draggable="true" id="b1" data-type="bag"></div></div>
+                <div class="box-cell"><div class="item bag-2" draggable="true" id="b2" data-type="bag"></div></div>
+                <div class="box-cell"><div class="item bag-3" draggable="true" id="b3" data-type="bag"></div></div>
+                <div class="box-cell"><div class="item bag-4" draggable="true" id="b4" data-type="bag"></div></div>
+                <div class="box-cell"><div class="item bag-5" draggable="true" id="b5" data-type="bag"></div></div>
+            </div>
+        </div>
+
+        <div class="closet-shelf">
+            <div class="shelf-name">매칭 슈즈 코너 (신발)</div>
+            <div class="item-grid">
+                <div class="box-cell"><div class="item shoes-1" draggable="true" id="s1" data-type="shoes"><div class="sh-art"></div><div class="sh-art"></div></div></div>
+                <div class="box-cell"><div class="item shoes-2" draggable="true" id="s2" data-type="shoes"><div class="sh-art"></div><div class="sh-art"></div></div></div>
+                <div class="box-cell"><div class="item shoes-3" draggable="true" id="s3" data-type="shoes"><div class="sh-art"></div><div class="sh-art"></div></div></div>
+                <div class="box-cell"><div class="item shoes-4" draggable="true" id="s4" data-type="shoes"><div class="sh-art"></div><div class="sh-art"></div></div></div>
+                <div class="box-cell"><div class="item shoes-5" draggable="true" id="s5" data-type="shoes"><div class="sh-art"></div><div class="sh-art"></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="room-side">
+        <div class="cat-canvas" id="main-cat-character">
+            <div class="cat-ear l-side"></div>
+            <div class="cat-ear r-side"></div>
+            <div class="cat-arm-limb l-side"></div>
+            <div class="cat-arm-limb r-side"></div>
+            <div class="cat-leg-limb l-side"></div>
+            <div class="cat-leg-limb r-side"></div>
+            <div class="cat-body-base"></div>
+            <div class="cat-head-base">
+                <div class="cat-face-layout">
+                    <div class="cat-eye-dot l-side"></div>
+                    <div class="cat-eye-dot r-side"></div>
+                    <div class="cat-blush-skin l-side" id="blush-l"></div>
+                    <div class="cat-blush-skin r-side" id="blush-r"></div>
+                    <div class="cat-nose-pink"></div>
+                    <div class="cat-lips" id="lips-zone"></div>
+                </div>
+            </div>
+
+            <div class="target-slot slot-hat" data-category="hat"></div>
+            <div class="target-slot slot-glasses" data-category="glasses"></div>
+            <div class="target-slot slot-clothes" data-category="clothes"></div>
+            <div class="target-slot slot-bag" data-category="bag"></div>
+            <div class="target-slot slot-shoes" data-category="shoes"></div>
+        </div>
+
+        <button class="next-step-btn" id="to-makeup-btn">💄 화장하러 가기 💄</button>
+    </div>
+
+    <div id="vanity-overlay">
+        <div class="vanity-mirror-zone" id="mirror-cat-holder">
+            </div>
+        <div class="vanity-cosmetic-box">
+            <div>
+                <div class="makeup-title">화장대 테이블</div>
+                
+                <div class="tool-row">
+                    <div class="tool-label">치크 블러셔 (볼터치)</div>
+                    <div class="color-palette">
+                        <div class="color-dot" style="background: #ff8a80;" onclick="applyBlush('#ff8a80')"></div>
+                        <div class="color-dot" style="background: #ff4081;" onclick="applyBlush('#ff4081')"></div>
+                        <div class="color-dot" style="background: #ffb74d;" onclick="applyBlush('#ffb74d')"></div>
+                        <div class="color-dot" style="background: #e040fb;" onclick="applyBlush('#e040fb')"></div>
+                    </div>
+                </div>
+
+                <div class="tool-row">
+                    <div class="tool-label">립스틱 오버레이</div>
+                    <div class="color-palette">
+                        <div class="color-dot" style="background: #ff1744;" onclick="applyLips('#ff1744')"></div>
+                        <div class="color-dot" style="background: #f50057;" onclick="applyLips('#f50057')"></div>
+                        <div class="color-dot" style="background: #ff6d00;" onclick="applyLips('#ff6d00')"></div>
+                        <div class="color-dot" style="background: #d81b60;" onclick="applyLips('#d81b60')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="next-step-btn" id="to-date-btn">❤️ 진짜 데이트 가기! ❤️</button>
+        </div>
+    </div>
+
+    <div id="ending-screen">
+        <div class="dating-bench">
+            <div id="final-player-slot"></div>
+            
+            <div class="heart-center">💝</div>
+            
+            <div class="partner-cat-model">
+                <div class="p-ear l-side"></div><div class="p-ear r-side"></div>
+                <div class="p-arm l-side"></div><div class="p-arm r-side"></div>
+                <div class="p-leg l-side"></div><div class="p-leg r-side"></div>
+                <div class="p-body"></div>
+                <div class="p-head">
+                    <div class="cat-face-layout">
+                        <div class="cat-eye-dot l-side" style="background:#fff"></div>
+                        <div class="cat-eye-dot r-side" style="background:#fff"></div>
+                        <div class="cat-blush-skin l-side" style="background:rgba(255,64,129,0.4)"></div>
+                        <div class="cat-blush-skin r-side" style="background:rgba(255,64,129,0.4)"></div>
+                        <div class="cat-nose-pink"></div>
+                        <div class="cat-lips" style="background:#ff1744"></div>
+                    </div>
+                </div>
+                <div class="p-bouquet">💐</div>
+            </div>
+        </div>
+        <div class="ending-text">데이트 장소에서 성공적으로 만났다냥!<br>트렌디한 올 뉴 핏 코디와 풀 메이크업 덕분에 오늘 고백 대성공! 🥰</div>
+        <button class="reset-btn" onclick="window.location.reload()">처음부터 다시하기</button>
+    </div>
+</div>
+
+<script>
+    let activeDragItem = null;
+    const itemOriginCellMap = {};
+
+    // 옷장 서랍 레일 기초 인덱싱 및 드래그 바인딩
+    document.querySelectorAll('.item').forEach(item => {
+        itemOriginCellMap[item.id] = item.parentElement;
+
+        item.addEventListener('dragstart', () => {
+            activeDragItem = item;
+            item.classList.add('dragging');
+        });
+
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            activeDragItem = null;
+        });
+    });
+
+    // 오차 없는 1:1 슬롯 스냅 오버레이 이벤트 위임
+    document.querySelectorAll('.target-slot').forEach(slot => {
+        slot.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (activeDragItem && activeDragItem.dataset.type === slot.dataset.category) {
+                slot.classList.add('hovered');
+            }
+        });
+
+        slot.addEventListener('dragleave', () => {
+            slot.classList.remove('hovered');
+        });
+
+        slot.addEventListener('drop', (e) => {
+            e.preventDefault();
+            slot.classList.remove('hovered');
+
+            if (activeDragItem && activeDragItem.dataset.type === slot.dataset.category) {
+                // 이미 해당 부위에 코디가 입혀져 있으면 옷장의 원래 서랍으로 안전 반환 복귀
+                if (slot.children.length > 0) {
+                    const currentOutfit = slot.children[0];
+                    itemOriginCellMap[currentOutfit.id].appendChild(currentOutfit);
+                }
+                slot.appendChild(activeDragItem);
+            }
+        });
+    });
+
+    // 착용한 패션 의류를 옷장의 빈 박스로 드롭 시 해제 탈의 연동
+    document.querySelectorAll('.box-cell').forEach(cell => {
+        cell.addEventListener('dragover', (e) => { e.preventDefault(); });
+        cell.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (activeDragItem && cell.children.length === 0) {
+                cell.appendChild(activeDragItem);
+            }
+        });
+    });
+
+    // 화장대 스테이지 변환 라우터
+    document.getElementById('to-makeup-btn').addEventListener('click', () => {
+        const slots = document.querySelectorAll('.target-slot');
+        let outfitCount = 0;
+        slots.forEach(s => { if(s.children.length > 0) outfitCount++; });
+
+        if(outfitCount < 2) {
+            alert("요즘 유행하는 의상과 소품으로 최소 2개 이상 예쁘게 입힌 뒤 화장대로 넘어가주세요! 🎀");
+            return;
+        }
+
+        // 메인 피팅 고양이 캐릭터 통째로 캡처하여 거울 내부 존으로 순간이동 복제
+        const mainCatNode = document.getElementById('main-cat-character');
+        document.getElementById('mirror-cat-holder').appendChild(mainCatNode);
+        
+        // 화장대 레이어 팝업 온
+        document.getElementById('vanity-overlay').style.display = 'flex';
+    });
+
+    // 인터랙티브 실시간 화장 구현 함수
+    function applyBlush(color) {
+        document.getElementById('blush-l').style.background = color + "66"; // 투명도 부여 44
+        document.getElementById('blush-r').style.background = color + "66";
+    }
+
+    function applyLips(color) {
+        document.getElementById('lips-zone').style.background = color;
+    }
+
+    // 최종 데이트 만남 결과 무대 전환 라우터
+    document.getElementById('to-date-btn').addEventListener('click', () => {
+        const finishedCatWithMakeup = document.getElementById('main-cat-character');
+        
+        // 엔딩 무대 벤치 앞 1번 좌석으로 완벽 믹스된 캐릭터 본체 노드 수납 및 레이어 전개
+        document.getElementById('final-player-slot').appendChild(finishedCatWithMakeup);
+        document.getElementById('ending-screen').style.display = 'flex';
+    });
+</script>
+
+</body>
+</html>
